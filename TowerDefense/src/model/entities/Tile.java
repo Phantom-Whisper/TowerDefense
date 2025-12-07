@@ -1,24 +1,17 @@
 package model.entities;
 
-public class Tile {
-    private int x,y;
-    private final TileType type;
+public abstract class Tile {
+    protected final int x;
+    protected final int y;
 
-    public Tile(int x, int y, TileType type){
+    public Tile(int x, int y) {
         this.x = x;
         this.y = y;
-        this.type = type;
     }
 
-    public int getX() {
-        return x;
-    }
+    public int getX() { return x; }
+    public int getY() { return y; }
 
-    public int getY() {
-        return y;
-    }
-
-    public TileType getType() {
-        return type;
-    }
+    public abstract boolean isWalkable();
+    public abstract boolean isBuildable();
 }

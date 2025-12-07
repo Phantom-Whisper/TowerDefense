@@ -1,54 +1,40 @@
 package model.utils.loader;
 
+import factory.TileFactory;
 import model.entities.Tile;
-import model.entities.TileType;
-import views.Board;
+import model.entities.BoardModel;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class TextLoader implements ILoader<Tile> {
 
     @Override
-    public void Load(String path) throws IOException {
-        Board board = new Board();
-        try (BufferedReader reader = new BufferedReader(new FileReader(path))){
-            int x = 0, y = 0;
-            Tile tile;
-            String out;
-            while((out = reader.readLine()) != null){
-                for (int i = 0; i < out.length(); i++) {
-                    char c = out.charAt(i);
-                    switch (c){
-                        case 'S':
-                            tile = new Tile(x,y, TileType.START);
-                            board.add(tile);
-                            break;
-                        case '.':
-                            tile = new Tile(x,y, TileType.GRASS);
-                            board.add(tile);
-                            break;
-                        case 'R':
-                            tile = new Tile(x,y, TileType.ROAD);
-                            board.add(tile);
-                            break;
-                        case 'E':
-                            tile = new Tile(x,y, TileType.END);
-                            board.add(tile);
-                            break;
-                        default:
-                            break;
-                    }
-                    x++;
-                }
-                y++;
+    public BoardModel Load(String path) throws IOException {
+        List<String> lines = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
             }
-            board.setX(x);
-            board.setY(y);
         }
+
+        int height = lines.size();
+        int width = lines.get(0).length();
+
+        Tile[][] tiles = new Tile[height][width];
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                char c = lines.get(y).charAt(x);
+                tiles[y][x] = TileFactory.fromChar(c, x, y);
+            }
+        }
+
+        return new BoardModel(width, height, tiles);
     }
 }
