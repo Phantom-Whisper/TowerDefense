@@ -11,8 +11,9 @@ import javax.swing.*;
 
 public class TileView extends Pane {
     public TileView(Tile tile) {
-
-        setPrefSize(128, 128);
+        // TODO:
+        //  - find a way to make the panes responsive
+        // setPrefSize(128, 128);
 
         switch (tile) {
             case GrassTile grassTile -> setStyle("-fx-background-color: green; -fx-border-color: black;");

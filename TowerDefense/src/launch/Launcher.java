@@ -13,11 +13,11 @@ import views.Board;
 public class Launcher extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
+        ILoader loader = new TextLoader();
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/Board.fxml"));
         primaryStage.setScene(new Scene(fxmlLoader.load()));
         Board board = fxmlLoader.getController();
-        TextLoader loader = new TextLoader();
-        BoardModel model = loader.Load("rsrc/maps/map1.txt");
+        BoardModel model = (BoardModel)loader.Load("rsrc/maps/map1.txt");
         board.display(model);
         primaryStage.show();
     }
