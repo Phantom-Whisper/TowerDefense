@@ -1,4 +1,4 @@
-﻿package model.entities;
+package model.entities;
 
 public class GrassTile extends Tile {
     public GrassTile(int x, int y) {

@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TextLoader implements ILoader<Tile> {
+public class TextLoader implements ILoader<BoardModel> {
 
     @Override
     public BoardModel Load(String path) throws IOException {
@@ -22,16 +22,15 @@ public class TextLoader implements ILoader<Tile> {
                 lines.add(line);
             }
         }
-
         int height = lines.size();
-        int width = lines.get(0).length();
+        int width = lines.getFirst().length();
 
         Tile[][] tiles = new Tile[height][width];
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 char c = lines.get(y).charAt(x);
-                tiles[y][x] = TileFactory.fromChar(c, x, y);
+                tiles[y][x] = TileFactory.createTileFromChar(c, x, y);
             }
         }
 

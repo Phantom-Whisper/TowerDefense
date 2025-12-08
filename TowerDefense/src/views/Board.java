@@ -1,10 +1,12 @@
 package views;
 
+import javafx.fxml.FXML;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import model.entities.Tile;
 import model.entities.BoardModel;
 
-public class BoardView {
+public class Board {
     @FXML
     private GridPane grid;
 
@@ -16,10 +18,9 @@ public class BoardView {
 
         for (int y = 0; y < model.getHeight(); y++) {
             for (int x = 0; x < model.getWidth(); x++) {
-
                 Tile tile = tiles[y][x];
+                StackPane pane = new StackPane();
                 TileView tileView = new TileView(tile);
-
                 grid.add(tileView, x, y);
             }
         }
