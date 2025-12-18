@@ -1,6 +1,6 @@
 package factory;
 
-import model.entities.*;
+import model.entities.tile.*;
 
 public class TileFactory {
     public static Tile createTileFromChar(char c, int x, int y) {

@@ -2,6 +2,8 @@
 
 <?import javafx.scene.layout.*?>
 
-
-<GridPane fx:id="grid" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="views.Board">
+<GridPane xmlns="http://javafx.com/javafx/17.0.12"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="views.Board"
+          fx:id="grid">
 </GridPane>

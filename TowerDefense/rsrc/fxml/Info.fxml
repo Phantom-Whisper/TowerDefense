@@ -6,9 +6,21 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
+<VBox xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
-            fx:controller="CONTROLLER_NAME"
-            prefHeight="400.0" prefWidth="600.0">
+            fx:controller="views.InfoViewController">
+    <Label text="Informations"
+           style="-fx-font-size: 20px;
+                  -fx-font-weight: bold;
+                  -fx-text-fill: white;"/>
 
-</AnchorPane>
+    <HBox spacing="8">
+        <Label text="Turn :" style="-fx-text-fill: white;"/>
+        <Label fx:id="turnLabel" style="-fx-text-fill: white;"/>
+    </HBox>
+
+    <HBox spacing="8">
+        <Label text="Gold :" style="-fx-text-fill: white;"/>
+        <Label fx:id="moneyLabel" style="-fx-text-fill: gold;"/>
+    </HBox>
+</VBox>

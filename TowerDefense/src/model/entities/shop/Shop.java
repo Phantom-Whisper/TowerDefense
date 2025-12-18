@@ -1,4 +1,6 @@
-package model.entities;
+package model.entities.shop;
+
+import model.entities.tower.Tower;
 
 import java.util.Collection;
 

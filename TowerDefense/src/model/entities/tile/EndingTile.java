@@ -1,4 +1,4 @@
-package model.entities;
+package model.entities.tile;
 
 public class EndingTile extends Tile {
     public EndingTile(int x, int y) {

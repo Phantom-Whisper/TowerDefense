@@ -1,19 +1,20 @@
 package views;
 
+import javafx.beans.binding.StringBinding;
+import javafx.geometry.Insets;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
-import model.entities.GrassTile;
-import model.entities.RoadTile;
-import model.entities.StartingTile;
-import model.entities.EndingTile;
-import model.entities.Tile;
-
-import javax.swing.*;
+import model.entities.tile.GrassTile;
+import model.entities.tile.RoadTile;
+import model.entities.tile.StartingTile;
+import model.entities.tile.EndingTile;
+import model.entities.tile.Tile;
 
 public class TileView extends Pane {
     public TileView(Tile tile) {
         // TODO:
         //  - find a way to make the panes responsive
-        // setPrefSize(128, 128);
+        setPrefSize(64, 64);
 
         switch (tile) {
             case GrassTile grassTile -> setStyle("-fx-background-color: green; -fx-border-color: black;");

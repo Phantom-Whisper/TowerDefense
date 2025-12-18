@@ -1,14 +1,16 @@
-package model.entities;
+package model.entities.tower;
+
+import model.entities.enemy.Enemy;
 
 public abstract class Tower {
     protected int x;
     protected int y;
-    String name;
-    String description;
+    protected String name;
+    protected String description;
     protected double damage;
     protected double cooldown;
     protected double timer = 0;
-    protected float cost;
+    protected int cost;
     // TODO:
     //  - Ctor
     //  - maybe a dependancy to a strategy of targeting??
@@ -16,7 +18,7 @@ public abstract class Tower {
     //  - update()
     //  - attack()
 
-    public Tower(int x, int y, double damage, double cooldown, float cost, String name, String description){
+    public Tower(int x, int y, double damage, double cooldown, int cost, String name, String description){
         this.x = x;
         this.y = y;
         this.damage = damage;
@@ -37,4 +39,16 @@ public abstract class Tower {
     }
     public double getX() { return x; }
     public double getY() { return y; }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public int getCost() {
+        return cost;
+    }
 }
