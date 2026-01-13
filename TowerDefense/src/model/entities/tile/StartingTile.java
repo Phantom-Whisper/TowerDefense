@@ -1,8 +1,12 @@
 package model.entities.tile;
 
 public class StartingTile extends Tile {
-    public StartingTile(int x, int y) {
+    public StartingTile(double x, double y) {
         super(x,y);
+    }
+
+    public void update(){
+
     }
 
     @Override

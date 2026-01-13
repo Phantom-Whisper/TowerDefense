@@ -1,16 +1,11 @@
 package model.entities.tile;
 
-import model.entities.position.Position;
+import model.entities.Element;
 
-public abstract class Tile {
-    protected Position pos;
-
-    public Tile(int x, int y) {
-        pos = new Position(x,y);
+public abstract class Tile extends Element {
+    public Tile(double x, double y) {
+        super(x, y);
     }
-
-    public int getX() { return pos.getX(); }
-    public int getY() { return pos.getY(); }
 
     public abstract boolean isWalkable();
     public abstract boolean isBuildable();

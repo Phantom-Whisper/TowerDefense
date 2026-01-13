@@ -7,33 +7,18 @@ import javafx.stage.Stage;
 import model.entities.board.BoardModel;
 import model.entities.enemy.Goblin;
 import model.utils.controller.GameController;
+import model.utils.display.Spawner;
 import model.utils.loader.ILoader;
 import model.utils.loader.TextLoader;
+import model.utils.logic.AttackManager;
+import model.utils.logic.CollisionManager;
+import model.utils.logic.MovementManager;
+import model.utils.logic.ProjectileManager;
 import model.utils.thread.Ticker;
 import views.Board;
 import views.GameWindowController;
 
 public class Launcher extends Application {
-    /*
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        ILoader loader = new TextLoader();
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/Board.fxml"));
-        // Stage config
-        primaryStage.setScene(new Scene(fxmlLoader.load()));
-        primaryStage.setTitle("Tower Defense");
-        primaryStage.setResizable(false);
-
-        Board board = fxmlLoader.getController();
-        BoardModel model = (BoardModel)loader.load("rsrc/maps/map1.txt");
-        Ticker ticker = new Ticker(model);
-        ticker.start();
-        model.addEnemy(new Goblin(5,0,0));
-        board.display(model);
-        primaryStage.show();
-
-    } */
-
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/GameWindow.fxml"));
@@ -49,8 +34,29 @@ public class Launcher extends Application {
 
         GameWindowController view = loader.getController();
 
+        view.getBoardView().display(model);
+
         new GameController(model, view);
 
+        Spawner spawner = new Spawner(view.getBoardView(), model);
+        MovementManager movementManager = new MovementManager(model);
+        CollisionManager collisionManager = new CollisionManager(model);
+        ProjectileManager projectileManager = new ProjectileManager();
+        AttackManager attackManager = new AttackManager(model, projectileManager);
+
+        view.getBoardView().setProjectileManager(projectileManager);
+        view.getBoardView().setModel(model);
         stage.show();
+
+        Ticker ticker = new Ticker();
+        ticker.attach(spawner);
+        ticker.attach(movementManager);
+        ticker.attach(collisionManager);
+        ticker.attach(projectileManager);
+        ticker.attach(attackManager);
+
+        Thread thread = new Thread(ticker);
+        thread.setDaemon(true);
+        thread.start();
     }
 }

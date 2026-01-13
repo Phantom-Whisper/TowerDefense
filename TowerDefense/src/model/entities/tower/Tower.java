@@ -1,12 +1,11 @@
 package model.entities.tower;
 
-import model.entities.enemy.Enemy;
+import model.entities.Element;
 
-public abstract class Tower {
-    protected int x;
-    protected int y;
+public abstract class Tower extends Element {
     protected String name;
     protected String description;
+    protected String spritePath;
     protected double damage;
     protected double cooldown;
     protected double timer = 0;
@@ -18,28 +17,32 @@ public abstract class Tower {
     //  - update()
     //  - attack()
 
-    public Tower(int x, int y, double damage, double cooldown, int cost, String name, String description){
-        this.x = x;
-        this.y = y;
+    public Tower(double x, double y, double damage, double cooldown, int cost, String name, String description, String spritePath){
+        super(x, y);
         this.damage = damage;
         this.cooldown = cooldown;
         this.cost = cost;
         this.name = name;
         this.description = description;
-    }
-    public void update(double delta){
-
+        this.spritePath = spritePath;
     }
 
-    public void attack(Enemy target){
-        if (timer < cooldown){
-            return;
-        }
-        target.takeDamage(damage);
+    // Dans Tower.java
+    public boolean canAttack() {
+        return timer <= 0;
     }
-    public double getX() { return x; }
-    public double getY() { return y; }
 
+    public void resetCooldown() {
+        this.timer = this.cooldown * 60; // cooldown en secondes * 60 ticks
+    }
+
+    public void update(double delta) {
+        if (timer > 0) timer -= delta;
+    }
+
+    public double getDamage() { return damage; }
+
+    // Getters
     public String getName() {
         return name;
     }
@@ -50,5 +53,9 @@ public abstract class Tower {
 
     public int getCost() {
         return cost;
+    }
+
+    public String getSpritePath(){
+        return spritePath;
     }
 }

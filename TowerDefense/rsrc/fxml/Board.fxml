@@ -2,8 +2,11 @@
 
 <?import javafx.scene.layout.*?>
 
-<GridPane xmlns="http://javafx.com/javafx/17.0.12"
+<StackPane xmlns="http://javafx.com/javafx/17.0.12"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="views.Board"
-          fx:id="grid">
-</GridPane>
+           fx:id="board">
+    <GridPane fx:id="grid" mouseTransparent="true"/>
+
+    <Pane fx:id="entityPane" pickOnBounds="true" />
+</StackPane>

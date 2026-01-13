@@ -1,8 +1,12 @@
 package model.entities.tile;
 
 public class RoadTile extends Tile {
-    public RoadTile(int x, int y) {
+    public RoadTile(double x, double y) {
         super(x, y);
+    }
+
+    public void update(){
+
     }
 
     @Override
