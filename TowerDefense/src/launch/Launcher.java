@@ -27,7 +27,7 @@ public class Launcher extends Application {
         stage.setScene(scene);
         stage.setTitle("Tower Defense");
         stage.setResizable(false);
-        //stage.setAlwaysOnTop(true);
+        stage.setAlwaysOnTop(true);
 
         GameWindowController controller = loader.getController();
         controller.initGame();
