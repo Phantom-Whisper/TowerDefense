@@ -29,34 +29,9 @@ public class Launcher extends Application {
         stage.setResizable(false);
         //stage.setAlwaysOnTop(true);
 
-        ILoader<BoardModel> mapLoader = new TextLoader();
-        BoardModel model = mapLoader.load("rsrc/maps/map1.txt");
+        GameWindowController controller = loader.getController();
+        controller.initGame();
 
-        GameWindowController view = loader.getController();
-
-        view.getBoardView().display(model);
-
-        new GameController(model, view);
-
-        Spawner spawner = new Spawner(view.getBoardView(), model);
-        MovementManager movementManager = new MovementManager(model);
-        CollisionManager collisionManager = new CollisionManager(model);
-        ProjectileManager projectileManager = new ProjectileManager();
-        AttackManager attackManager = new AttackManager(model, projectileManager);
-
-        view.getBoardView().setProjectileManager(projectileManager);
-        view.getBoardView().setModel(model);
         stage.show();
-
-        Ticker ticker = new Ticker();
-        ticker.attach(spawner);
-        ticker.attach(movementManager);
-        ticker.attach(collisionManager);
-        ticker.attach(projectileManager);
-        ticker.attach(attackManager);
-
-        Thread thread = new Thread(ticker);
-        thread.setDaemon(true);
-        thread.start();
     }
 }

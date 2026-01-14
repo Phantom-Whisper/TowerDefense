@@ -1,9 +1,5 @@
 package model.utils.thread;
 
-import model.entities.board.BoardModel;
-import model.entities.enemy.Enemy;
-import model.utils.logic.CollisionManager;
-import model.utils.logic.MovementManager;
 import model.utils.observer.Observer;
 
 import java.util.ArrayList;
@@ -14,6 +10,10 @@ public class Ticker implements Runnable {
     private boolean running = true;
 
     public void attach(Observer o) { observers.add(o); }
+
+    public void stop(){
+        running = false;
+    }
 
     @Override
     public void run() {

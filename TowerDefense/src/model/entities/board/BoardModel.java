@@ -6,20 +6,22 @@ import model.entities.tile.EndingTile;
 import model.entities.tile.RoadTile;
 import model.entities.tile.StartingTile;
 import model.entities.tile.Tile;
-import model.entities.tower.FixedTower;
-import model.entities.tower.RangingTower;
 import model.entities.tower.Tower;
+import model.utils.catalog.TowerCatalog;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BoardModel {
-    private final int width; // Nombre de colonnes (int)
-    private final int height; // Nombre de lignes (int)
+    private final int width;
+    private final int height;
     private final Tile[][] grid;
     private List<Enemy> enemies = new ArrayList<>();
     private List<Tower> towers = new ArrayList<>();
     private Castle castle;
+    private int money = 200; // Argent de départ
+    private long startTime;
+    private long elapsedTime;
 
     public BoardModel(int width, int height, List<Tile> tiles) {
         this.width = width;
@@ -37,22 +39,22 @@ public class BoardModel {
                 }
             }
         }
+
+        this.startTime = System.currentTimeMillis();
     }
 
     public void createTower(String type, double col, double row) {
         int c = (int) col;
         int r = (int) row;
+        Tower template = TowerCatalog.getTowerTemplate(type);
 
-        Tower tower;
-        // TODO
-        // - Changer ça c'est nul, faut recupérer les stats depuis ShopViewController
+        if (template != null) {
+            if (this.spendMoney(template.getCost())){
+                Tower newTower = template.createAt(col, row);
+                this.addTower(newTower);
+            }
 
-        if (type.contains("FixedTower")) {
-            tower = new FixedTower(c, r, 25, 1, 50);
-        } else {
-            tower = new RangingTower(c, r, 20, 2, 80);
         }
-        this.addTower(tower);
     }
 
     public Tile getStartingTile() {
@@ -102,6 +104,31 @@ public class BoardModel {
                 && !isTowerAt(c, r);
     }
 
+    public boolean isGameOver(){
+        return castle != null && castle.isDead();
+    }
+
+    public void addMoney(int amount) { this.money += amount; }
+
+    public boolean spendMoney(int amount) {
+        if (this.money >= amount) {
+            this.money -= amount;
+            return true;
+        }
+        return false;
+    }
+
+    // Gestion du temps
+    public void updateTimer() {
+        if (!isGameOver()) {
+            this.elapsedTime = (System.currentTimeMillis() - startTime) / 1000;
+        }
+    }
+
+    public String getFormattedTime() {
+        return String.format("%02d:%02d", elapsedTime / 60, elapsedTime % 60);
+    }
+
     // Getters
     public double getWidth() { return width; }
     public double getHeight() { return height; }
@@ -113,8 +140,6 @@ public class BoardModel {
         if (ix < 0 || ix >= width || iy < 0 || iy >= height) return null;
         return grid[ix][iy];
     }
-
-    public Tile[][] getGrid() { return grid; }
 
     public void addEnemy(Enemy enemy){
         enemies.add(enemy);
@@ -128,7 +153,7 @@ public class BoardModel {
         return castle;
     }
 
-    public void removeEnemy(Enemy e) {
-        enemies.remove(e);
+    public int getMoney() {
+        return money;
     }
 }

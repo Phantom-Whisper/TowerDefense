@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
@@ -15,8 +12,8 @@
                   -fx-text-fill: white;"/>
 
     <HBox spacing="8">
-        <Label text="Turn :" style="-fx-text-fill: white;"/>
-        <Label fx:id="turnLabel" style="-fx-text-fill: white;"/>
+        <Label text="Time :" style="-fx-text-fill: white;"/>
+        <Label fx:id="timerLabel" style="-fx-text-fill: white;"/>
     </HBox>
 
     <HBox spacing="8">

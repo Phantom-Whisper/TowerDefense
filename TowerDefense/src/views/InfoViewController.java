@@ -1,31 +1,37 @@
 package views;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import model.entities.board.BoardModel;
 
 public class InfoViewController {
     @FXML
-    private Label turnLabel;
-    @FXML private Label moneyLabel;
+    private Label moneyLabel;
+    @FXML
+    private Label timerLabel;
 
-    private final IntegerProperty turn = new SimpleIntegerProperty(1);
-    private final IntegerProperty money = new SimpleIntegerProperty(100);
+    private final IntegerProperty money = new SimpleIntegerProperty(0);
+    private final StringProperty time = new SimpleStringProperty("00:00");
 
     public void initialize() {
-        turnLabel.textProperty().bind(turn.asString());
-        moneyLabel.textProperty().bind(
-                Bindings.format("$%d", money.get())
-        );
+
+        moneyLabel.textProperty().bind(Bindings.format("$%d", money));
+
+        if (timerLabel != null) {
+            timerLabel.textProperty().bind(time);
+        }
     }
 
-    public void setTurn(int value) {
-        turn.set(value);
-    }
-
-    public void setMoney(int value) {
-        money.set(value);
+    public void updateInfo(BoardModel model) {
+        Platform.runLater(() -> {
+            money.set((int) model.getMoney());
+            time.set(model.getFormattedTime());
+        });
     }
 }

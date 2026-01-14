@@ -2,20 +2,33 @@
 
 <?import javafx.scene.layout.*?>
 
-<HBox xmlns="http://javafx.com/javafx/17.0.12"
-      xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="views.GameWindowController">
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<StackPane xmlns="http://javafx.com/javafx/17.0.12"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="views.GameWindowController">
 
-    <AnchorPane HBox.hgrow="ALWAYS">
-        <fx:include source="Board.fxml" fx:id="boardView"
-                    AnchorPane.topAnchor="0.0"
-                    AnchorPane.bottomAnchor="0.0"
-                    AnchorPane.leftAnchor="0.0"
-                    AnchorPane.rightAnchor="0.0" />
-    </AnchorPane>
+    <HBox>
+        <AnchorPane HBox.hgrow="ALWAYS">
+            <fx:include source="Board.fxml" fx:id="boardView"
+                        AnchorPane.topAnchor="0.0"
+                        AnchorPane.bottomAnchor="0.0"
+                        AnchorPane.leftAnchor="0.0"
+                        AnchorPane.rightAnchor="0.0" />
+        </AnchorPane>
 
-    <VBox prefWidth="280" spacing="15" style="-fx-background-color: #2b2b2b;">
-        <fx:include source="Info.fxml" fx:id="infoView" />
-        <fx:include source="Shop.fxml" fx:id="shopView" />
+        <VBox prefWidth="280" spacing="15" style="-fx-background-color: #2b2b2b;">
+            <fx:include source="Info.fxml" fx:id="infoView" />
+            <fx:include source="Shop.fxml" fx:id="shopView" />
+        </VBox>
+    </HBox>
+
+    <VBox fx:id="gameOverOverlay" visible="false" alignment="CENTER" spacing="20"
+          style="-fx-background-color: rgba(0, 0, 0, 0.85);">
+        <Label text="GAME OVER" style="-fx-text-fill: #e74c3c; -fx-font-size: 60px; -fx-font-weight: bold;" />
+        <Label text="The castle has been invaded." style="-fx-text-fill: white; -fx-font-size: 18px;" />
+        <Label fx:id="gameOverTimeLabel" text="Time: 00:00" style="-fx-text-fill: #f1c40f; -fx-font-size: 24px;" />
+        <Button text="Play Again" onAction="#restartGame"
+                style="-fx-font-size: 22px; -fx-background-color: #2ecc71; -fx-text-fill: white; -fx-cursor: hand; -fx-padding: 10 40;" />
     </VBox>
-</HBox>
+</StackPane>

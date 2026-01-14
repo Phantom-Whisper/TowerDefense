@@ -10,4 +10,9 @@ public class RangingTower extends Tower {
     public void update(){
 
     }
+
+    @Override
+    public Tower createAt(double x, double y) {
+        return new FixedTower(x, y, this.damage, this.cooldown, this.cost);
+    }
 }
