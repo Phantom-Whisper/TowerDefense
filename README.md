@@ -32,155 +32,408 @@ It was created for **educational purposes**, with a strong focus on **software d
 classDiagram
     direction TB
 
-%% ======================
-%%       MAP / TILES
-%% ======================
-
-    class Tile {
-        +int x
-        +int y
-        +TileType type
+    %% ---------------- Factory ----------------
+    class TileFactory {
+        <<utility>>
+        + createTileFromChar(c : char, x : int, y : int) : Tile
     }
 
-    class GrassTile
-    class RoadTile
-    class StartingTile
-    class EndingTile
+    %% ---------------- Launch ----------------
+    class Launcher {
+        + start(stage : Stage) : void
+    }
 
-    Tile <|-- GrassTile
-    Tile <|-- RoadTile
-    Tile <|-- StartingTile
-    Tile <|-- EndingTile
+    %% ---------------- Model ----------------
+    class Element {
+        <<abstract>>
+        + Element(x : double, y : double)
+        + update() : void
+        + getX() : double
+        + getY() : double
+        + setX(x : double) : void
+        + setY(y : double) : void
+    }
+
+    class Killable {
+        <<abstract>>
+        # health : double
+        + Killable(x : double, y : double, health : double)
+        + takeDamage(damage : double) : void
+        + isDead() : boolean
+        + getHealth() : double
+    }
+
+    class Position {
+        # x : double
+        # y : double
+        + Position(x : double, y : double)
+        + getX() : double
+        + getY() : double
+        + setX(x : double) : void
+        + setY(y : double) : void
+    }
 
     class BoardModel {
-        -Tile[][] tiles
-        +int width
-        +int height
-        +Tile[][] getTiles()
-        +void setTile(int x, int y, Tile tile)
+        - width : int
+        - height : int
+        - castle : Castle
+        - money : int = 200
+        - startTime : long
+        - elapsedTime : long
+        + BoardModel(width : int, height : int, tiles : List~Tile~)
+        + createTower(type : String, col : double, row : double) : void
+        + getStartingTile() : Tile
+        + getValidNeighbors(current : Tile, last : Tile) : List~Tile~
+        + addTower(tower : Tower) : void
+        + getTowers() : List~Tower~
+        + isTowerAt(col : int, row : int) : boolean
+        + isGameOver() : boolean
+        + addMoney(amount : int) : void
+        + spendMoney(amount : int) : boolean
+        + updateTimer() : void
+        + getFormattedTime() : String
+        + getWidth() : double
+        + getHeight() : double
+        + getTile(x : double, y : double) : Tile
+        + addEnemy(enemy : Enemy) : void
+        + getEnemies() : List~Enemy~
+        + getCastle() : Castle
+        + getMoney() : int
     }
 
-    class BoardView {
-        -GridPane grid
-        +void display(BoardModel model)
+    class Castle {
+        + Castle(x : double, y : double, health : double)
+        + update() : void
     }
 
-    BoardModel --> Tile : contains
-    BoardView --> TileView : creates
+    class Enemy {
+        <<abstract>>
+        # speed : double
+        # currentTarget : Tile
+        # lastTile : Tile
+        + Enemy(x : double, y : double, health : double, speed : double)
+        + update(model : BoardModel) : void
+        + isAtEnd() : boolean
+        + getSpritePath() : String
+        + getCurrentTarget() : Tile
+        + getLastTile() : Tile
+        + getSpeed() : double
+        + setLastTile(lastTile : Tile) : void
+        + setCurrentTarget(currentTarget : Tile) : void
+    }
 
+    class Goblin {
+        + Goblin(x : double, y : double)
+        + update() : void
+        + getSpritePath() : String
+    }
 
-%% ======================
-%%          LOADER
-%% ======================
+    class Projectile {
+        <<abstract>>
+        # spritePath : String
+        # target : Enemy
+        # damage : double
+        # speed : double = 0.2
+        + Projectile(x : double, y : double, target : Enemy, damage : double)
+        + update() : void
+        + hasHitTarget() : boolean
+        + getSpritePath() : String
+        + getTarget() : Enemy
+        + getDamage() : double
+    }
+
+    class Cannonball {
+        + Cannonball(x : double, y : double, target : Enemy, damage : double)
+        + update() : void
+        + getSpritePath() : String
+    }
+
+    class Tile {
+        <<abstract>>
+        + Tile(x : double, y : double)
+        + isWalkable() : boolean
+        + isBuildable() : boolean
+    }
+
+    class StartingTile {
+        + StartingTile(x : double, y : double)
+        + update() : void
+        + isWalkable() : boolean
+        + isBuildable() : boolean
+    }
+
+    class EndingTile {
+        + EndingTile(x : double, y : double)
+        + update() : void
+        + isWalkable() : boolean
+        + isBuildable() : boolean
+    }
+
+    class GrassTile {
+        + GrassTile(x : double, y : double)
+        + update() : void
+        + isWalkable() : boolean
+        + isBuildable() : boolean
+    }
+
+    class RoadTile {
+        + RoadTile(x : double, y : double)
+        + update() : void
+        + isWalkable() : boolean
+        + isBuildable() : boolean
+    }
+
+    class Tower {
+        <<abstract>>
+        # name : String
+        # description : String
+        # spritePath : String
+        # damage : double
+        # cooldown : double
+        # timer : double
+        # cost : int
+        + Tower(x : double, y : double, damage : double, cooldown : double, cost : int, name : String, description : String, spritePath : String)
+        + canAttack() : boolean
+        + createAt(x : double, y : double) : Tower
+        + resetCooldown() : void
+        + update(delta : double) : void
+        + getDamage() : double
+        + getName() : String
+        + getDescription() : String
+        + getCost() : int
+        + getSpritePath() : String
+    }
+
+    class FixedTower {
+        + FixedTower(x : double, y : double, damage : double, cooldown : double, cost : int)
+        + update() : void
+        + createAt(x : double, y : double) : Tower
+    }
+
+    class RangingTower {
+        + RangingTower(x : double, y : double, damage : double, cooldown : double, cost : int)
+        + update() : void
+        + createAt(x : double, y : double) : Tower
+    }
+
+    class TowerCatalog {
+        <<utility>>
+        - towerCatalog : Map~String, Tower~
+        + getAvailableTowers() : Collection~Tower~
+        + getTowerTemplate(id : String) : Tower
+    }
+
+    %% ---------------- Logic ----------------
+    class Observer {
+        <<abstract>>
+        # ticks : int
+        + update() : void
+    }
+
+    class Subject {
+        # observers : List~Observer~
+        + attach(obs : Observer) : void
+        + detach(obs : Observer) : void
+    }
+
+    class Ticker {
+        - running : boolean
+        + attach(o : Observer) : void
+        + stop() : void
+        + run() : void
+    }
+
+    class Spawner {
+        - enemiesWaitingToSpawn : int
+        - spawnInterval : int
+        - random : Random
+        + Spawner(board : Board, model : BoardModel)
+        + update() : void
+        - spawnOneEnemy() : void
+    }
+
+    class ProjectileManager {
+        - projectiles : List~Projectile~
+        + addProjectile(p : Projectile) : void
+        + update() : void
+        + getProjectiles() : List~Projectile~
+    }
+
+    class MovementManager {
+        - model : BoardModel
+        - random : Random
+        + MovementManager(model : BoardModel)
+        + update() : void
+    }
+
+    class CollisionManager {
+        - model : BoardModel
+        - ticker : Ticker
+        - onGameOver : Runnable
+        + CollisionManager(model : BoardModel, ticker : Ticker, onGameOver : Runnable)
+        + update() : void
+        + checkCollisions() : void
+    }
+
+    class AttackManager {
+        - model : BoardModel
+        - projectileManager : ProjectileManager
+        + AttackManager(model : BoardModel, pm : ProjectileManager)
+        + update() : void
+    }
 
     class ILoader~T~ {
-        +T load(String path)
+        <<interface>>
+        + load(path : String) : T
     }
 
     class TextLoader {
-        +BoardModel load(String path)
+        + load(path : String) : BoardModel
     }
 
-    ILoader <|.. TextLoader
-    TextLoader --> BoardModel : builds
-
-
-%% ======================
-%%         TILE VIEWS
-%% ======================
-
+    %% ---------------- Views ----------------
     class TileView {
-        +TileView(Tile tile)
+        + TileView(tile : Tile)
     }
+
+    class ProjectileView {
+        - projectile : Projectile
+        - image : ImageView
+        + ProjectileView(projectile : Projectile)
+        + update() : void
+    }
+
+    class EnemyView {
+        - enemy : Enemy
+        - imageView : ImageView
+        + EnemyView(enemy : Enemy)
+        + update() : void
+    }
+
+    class CastleView {
+        + CastleView(castle : Castle, cellSize : double)
+    }
+
+    class Board {
+        - board : StackPane
+        - grid : GridPane
+        - entityPane : Pane
+        - projectileManager : ProjectileManager
+        - model : BoardModel
+        + setModel(model : BoardModel)
+        + setProjectileManager(pm : ProjectileManager)
+        + display(model : BoardModel)
+        + updateView()
+    }
+
+    class GameWindowController {
+        - boardViewController : Board
+        - infoViewController : InfoViewController
+        - gameOverOverlay : VBox
+        - gameOverTimeLabel : Label
+        - model : BoardModel
+        - ticker : Ticker
+        + initGame() : void
+        + restartGame() : void
+    }
+
+    class ShopViewController {
+        - towerListView : ListView~Tower~
+        + initialize() : void
+    }
+
+    class InfoViewController {
+        - moneyLabel : Label
+        - timerLabel : Label
+        - money : IntegerProperty
+        - time : StringProperty
+        + initialize() : void
+        + updateInfo(model : BoardModel) : void
+    }
+
+    class ImageResource {
+        + getImage(path : String) : Image
+    }
+
+    %% ---------------- Héritage ----------------
+    Tile <|-- StartingTile
+    Tile <|-- EndingTile
+    Tile <|-- GrassTile
+    Tile <|-- RoadTile
+
+    Tower <|-- FixedTower
+    Tower <|-- RangingTower
+
+    Enemy <|-- Goblin
+    Projectile <|-- Cannonball
+
+    Element <|-- Killable
+    Element <|-- Tower
+    Element <|-- Tile
+    Element --> Position : # position
+
+    Observer <|-- Spawner
+    Observer <|-- Ticker
+    Observer <|-- ProjectileManager
+    Observer <|-- MovementManager
+    Observer <|-- CollisionManager
+    Observer <|-- AttackManager
+    Subject <|-- BoardModel
+
+    BoardModel --> Tower : *towers
+    BoardModel --> Enemy : *enemies
+    BoardModel --> Tile : grid[][]
+    BoardModel --> Castle
+
+    TowerCatalog --> Tower
+    Spawner --> Board
+    Spawner --> BoardModel
+    Spawner --> Enemy
+    Spawner --> Tile
+
+    MovementManager --> Enemy
+    MovementManager --> BoardModel
+    MovementManager --> Tile
+
+    CollisionManager --> BoardModel
+    CollisionManager --> Ticker
+
+    AttackManager --> BoardModel
+    AttackManager --> Tower
+    AttackManager --> ProjectileManager
+    AttackManager --> Enemy
+
+    TileFactory --> Tile
+    TextLoader --> BoardModel
+    TextLoader --> TileFactory
+    TextLoader --> Tile
 
     TileView --> Tile
-
-
-%% ======================
-%%          ENEMY
-%% ======================
-
-    class Enemy {
-        #double x
-        #double y
-        #double speed
-        #double hp
-        #boolean alive
-        #List~Tile~ path
-        #int currentIndex
-        +void update(double dt)
-        +void damage(double amount)
-        +double getX()
-        +double getY()
-        +boolean isAlive()
-        <<abstract>>
-    }
-
-    class BasicEnemy {
-        +BasicEnemy(List~Tile~ path)
-    }
-
-    Enemy <|-- BasicEnemy
-
-
-%% ======================
-%%           TOWERS
-%% ======================
-
-    class Tower {
-        #double x
-        #double y
-        #double range
-        #double damage
-        #double cooldown
-        #double timer
-        #TargetingStrategy targetingStrategy
-        +void update(BoardModel board, double dt)
-        <<abstract>>
-    }
-
-    class TowerAOE
-    class TowerSingleTarget
-
-    Tower <|-- TowerAOE
-    Tower <|-- TowerSingleTarget
-
-    class TowerFactory {
-        +static Tower create(String type, double x, double y)
-    }
-
-    TowerFactory --> Tower : creates
-
-
-%% ======================
-%%   TARGETING STRATEGY
-%% ======================
-
-    class TargetingStrategy {
-        +List~Enemy~ selectTargets(BoardModel board, double x, double y, double range)
-        <<interface>>
-    }
-
-    class AoeTargetingStrategy
-    class SingleTargetingStrategy
-
-    TargetingStrategy <|.. AoeTargetingStrategy
-    TargetingStrategy <|.. SingleTargetingStrategy
-
-    Tower --> TargetingStrategy : uses
-    TargetingStrategy --> Enemy : selects
-
-
-%% ======================
-%%        LAUNCHER
-%% ======================
-
-    class Launcher {
-        +void start(Stage)
-    }
-
-    Launcher --> BoardView : loads FXML
-    Launcher --> BoardModel : loads map
+    ProjectileView --> Projectile
+    EnemyView --> Enemy
+    CastleView --> Castle
+    Board --> TileView
+    Board --> EnemyView
+    Board --> ProjectileView
+    Board --> CastleView
+    Board --> Tower
+    Board --> BoardModel
+    Board --> ImageResource
+    GameWindowController --> Board
+    GameWindowController --> InfoViewController
+    GameWindowController --> Ticker
+    GameWindowController --> BoardModel
+    GameWindowController --> TextLoader
+    GameWindowController --> CollisionManager
+    GameWindowController --> MovementManager
+    GameWindowController --> ProjectileManager
+    GameWindowController --> AttackManager
+    GameWindowController --> Spawner
+    ShopViewController --> TowerCatalog
+    InfoViewController --> BoardModel
+    ProjectileView --> ImageResource
+    EnemyView --> ImageResource
+    CastleView --> ImageResource
 ```
 
 ## 🚀 Installation & Run
